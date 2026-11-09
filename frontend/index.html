@@ -1,0 +1,379 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JARVIS Trading Dashboard</title>
+
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #080d18;
+  --panel: #111a2b;
+  --line: #25334b;
+  --muted: #91a0b8;
+  --cyan: #50d6e8;
+  --green: #35d49a;
+  --red: #ff6b7d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: #edf4ff;
+  font: 15px system-ui, Arial;
+}
+
+header {
+  padding: 22px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: 3px;
+}
+
+.brand span { color: var(--cyan); }
+
+.status { color: var(--green); }
+
+main {
+  max-width: 1400px;
+  margin: auto;
+  padding: 25px;
+}
+
+.muted { color: var(--muted); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin: 22px 0;
+}
+
+.panel, .tile {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  padding: 18px;
+  min-width: 0;
+}
+
+.price {
+  font-size: 27px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 15px;
+}
+
+h2 { font-size: 18px; }
+
+iframe {
+  width: 100%;
+  height: 430px;
+  border: 0;
+  border-radius: 10px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+input, select, button {
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #0b1424;
+  color: white;
+}
+
+input { min-width: 0; width: 100%; }
+
+button { cursor: pointer; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+td, th {
+  text-align: left;
+  padding: 11px 5px;
+  border-bottom: 1px solid var(--line);
+}
+
+th { color: var(--muted); }
+
+.scroll { overflow-x: auto; }
+
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+
+footer {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 25px;
+}
+
+@media(max-width:800px) {
+  .grid, .layout { grid-template-columns: 1fr; }
+  main { padding: 15px; }
+  iframe { height: 350px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">JARVIS<span>.</span></div>
+  <div class="status">● MARKET SYSTEM</div>
+</header>
+
+<main>
+
+<div class="muted">TRADING INTELLIGENCE / INDIA</div>
+<h1>Market Overview</h1>
+<p class="muted">Your trading research command centre</p>
+
+<section class="grid" id="tiles">
+
+<div class="tile">
+  <small>NIFTY 50</small>
+  <div class="price">Loading...</div>
+</div>
+
+<div class="tile">
+  <small>BANK NIFTY</small>
+  <div class="price">Loading...</div>
+</div>
+
+<div class="tile">
+  <small>DATA SOURCE</small>
+  <div class="price">Yahoo Finance</div>
+</div>
+
+</section>
+
+<section class="layout">
+
+<div class="panel">
+<h2>TradingView Chart</h2>
+
+<select id="symbol">
+<option value="NSE:NIFTY">NIFTY 50</option>
+<option value="NSE:BANKNIFTY">BANK NIFTY</option>
+<option value="NSE:RELIANCE">RELIANCE</option>
+<option value="NSE:TCS">TCS</option>
+<option value="NASDAQ:AAPL">APPLE</option>
+</select>
+
+<iframe id="chart"
+src="https://s.tradingview.com/widgetembed/?symbol=NSE%3ANIFTY&interval=D&theme=dark&style=1&timezone=Asia%2FKolkata">
+</iframe>
+</div>
+
+<div class="panel">
+
+<h2>Watchlist</h2>
+
+<div class="toolbar">
+<input id="watch"
+value="RELIANCE.NS,TCS.NS,INFY.NS,HDFCBANK.NS">
+<button id="refresh">Refresh</button>
+</div>
+
+<div class="scroll">
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Price</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody id="quotes">
+<tr><td colspan="3">Loading...</td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+
+<div class="panel">
+
+<h2>Technical Signals</h2>
+<p class="muted">SMA 20 / SMA 50 / RSI 14</p>
+
+<div class="scroll">
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Signal</th>
+<th>RSI</th>
+</tr>
+</thead>
+<tbody id="signals">
+<tr><td colspan="3">Loading...</td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+
+<div class="panel">
+<h2>JARVIS Market Notes</h2>
+<p class="muted">
+Rule-based technical indicators for market research.
+These are not predictions or guaranteed trading signals.
+</p>
+</div>
+
+</section>
+
+<footer>
+JARVIS is a research dashboard, not a broker.
+It does not place trades or connect to Zerodha.
+Yahoo Finance data may be delayed or rate-limited.
+Nothing here is investment advice.
+</footer>
+
+</main>
+
+<script>
+
+const el = id => document.getElementById(id);
+
+function fmt(value) {
+  return value == null
+    ? "—"
+    : Number(value).toLocaleString("en-IN", {
+        maximumFractionDigits: 2
+      });
+}
+
+async function loadData() {
+
+  try {
+
+    const symbols = el("watch").value;
+
+    const [indices, quotes, signals] = await Promise.all([
+
+      fetch("/api/market/quotes?symbols=%5ENSEI,%5ENSEBANK")
+        .then(r => r.json()),
+
+      fetch("/api/market/quotes?symbols=" + encodeURIComponent(symbols))
+        .then(r => r.json()),
+
+      fetch("/api/signals?symbols=" + encodeURIComponent(symbols))
+        .then(r => r.json())
+
+    ]);
+
+    el("tiles").innerHTML = "";
+
+    (indices.quotes || []).forEach(item => {
+
+      const tile = document.createElement("div");
+      tile.className = "tile";
+
+      const name = document.createElement("small");
+      name.textContent = item.symbol;
+
+      const price = document.createElement("div");
+      price.className = "price";
+      price.textContent = fmt(item.price);
+
+      tile.append(name, price);
+      el("tiles").appendChild(tile);
+
+    });
+
+    const source = document.createElement("div");
+    source.className = "tile";
+    source.textContent = "Yahoo Finance · Market data";
+    el("tiles").appendChild(source);
+
+    el("quotes").innerHTML = "";
+
+    (quotes.quotes || []).forEach(item => {
+
+      const row = document.createElement("tr");
+
+      [item.symbol, fmt(item.price),
+       item.change_pct == null
+         ? "—"
+         : item.change_pct.toFixed(2) + "%"]
+      .forEach(value => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+      });
+
+      el("quotes").appendChild(row);
+
+    });
+
+    el("signals").innerHTML = "";
+
+    (signals.signals || []).forEach(item => {
+
+      const row = document.createElement("tr");
+
+      [item.symbol, item.signal || item.error || "—",
+       fmt(item.rsi14)]
+      .forEach(value => {
+        const cell = document.createElement("td");
+        cell.textContent = value;
+        row.appendChild(cell);
+      });
+
+      el("signals").appendChild(row);
+
+    });
+
+  } catch (error) {
+
+    el("quotes").textContent =
+      "Market data unavailable. Please refresh.";
+
+  }
+
+}
+
+el("refresh").onclick = loadData;
+
+el("symbol").onchange = () => {
+
+  el("chart").src =
+    "https://s.tradingview.com/widgetembed/?symbol=" +
+    encodeURIComponent(el("symbol").value) +
+    "&interval=D&theme=dark&style=1&timezone=Asia%2FKolkata";
+
+};
+
+loadData();
+setInterval(loadData, 60000);
+
+</script>
+
+</body>
+</html>
